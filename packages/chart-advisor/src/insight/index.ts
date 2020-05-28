@@ -1,6 +1,8 @@
 import { RowData } from '@antv/dw-transform';
 import { type as typeAnalyze, TypeSpecifics, isUnique } from '@antv/dw-analyzer';
 import { Insight } from 'visual-insights';
+import * as majorityFactors from './workers/majorityFactors';
+import * as seasonality from './workers/seasonality';
 
 const tuple = <T extends string[]>(...args: T) => args;
 
@@ -155,9 +157,16 @@ export function insightsFromData(data: RowData[]): Insight[] {
 // const simpleWorker: Insight.IntentionWorker
 export type IWorker = Insight.IntentionWorker;
 export type ISpace = Insight.InsightSpace;
-export const DefaultIWorker = Insight.DefaultIWorker;
-
 const workerCollection = Insight.IntentionWorkerCollection.init();
+
+export const DefaultIWorker = {
+  ...Insight.DefaultIWorker,
+  [majorityFactors.IWorkerName]: majorityFactors.IWorkerName,
+  [seasonality.IWorkerName]: seasonality.IWorkerName,
+};
+
+workerCollection.register(majorityFactors.IWorkerName, majorityFactors.MajorityWorker);
+workerCollection.register(seasonality.IWorkerName, seasonality.SeasonalityWorker);
 
 interface GetInsightSpacesProps {
   dataSource: RowData[];

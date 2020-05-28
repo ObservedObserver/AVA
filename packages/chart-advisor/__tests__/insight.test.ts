@@ -36,15 +36,18 @@ test('default workers can be accessed', () => {
     checkList[k] = false;
   });
   workerCollection.enable(DefaultIWorker.cluster, false);
+  // each cannot access disabled workers.
   workerCollection.each((_, name) => {
     if (name) {
       checkList[name] = true;
     }
   });
-  expect(checkList).toEqual({
-    [DefaultIWorker.cluster]: false,
-    [DefaultIWorker.outlier]: true,
-    [DefaultIWorker.trend]: true,
+  Object.values(DefaultIWorker).forEach((k) => {
+    if (k === DefaultIWorker.cluster) {
+      expect(checkList[k]).toBe(false);
+    } else {
+      expect(checkList[k]).toBe(true);
+    }
   });
 });
 
@@ -85,9 +88,10 @@ test('custom worker can be run', async () => {
     };
   };
   workerCollection.register(exampleIWorkerName, exampleIWorker);
-  workerCollection.enable(DefaultIWorker.cluster, false);
-  workerCollection.enable(DefaultIWorker.outlier, false);
-  workerCollection.enable(DefaultIWorker.trend, false);
+  // disable all default workers.
+  Object.values(DefaultIWorker).forEach((w) => {
+    workerCollection.enable(w, false);
+  });
   const spaces = await getInsightSpaces({
     dataSource: data,
     collection: workerCollection,
