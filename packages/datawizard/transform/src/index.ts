@@ -1,5 +1,5 @@
 /**
- * data transfroms
+ * data transforms
  *
  * @packageDocumentation
  */
@@ -29,4 +29,20 @@ export {
   FillType,
 } from './parse';
 
-export { autoTransform, AutoTransformResult } from './autoTransform';
+export { autoTransform, autoSchema, RenameOption, AutoTransformResult } from './autoTransform';
+
+export {
+  Dataset,
+  extractors,
+  compositeExtractor,
+  ExtractorType,
+  Extractor,
+  ColumnInfo,
+  Subspace,
+  AllSubspaceDatasetOptions,
+  SiblingGroup,
+  AggExtractorPair,
+  SubExtractorPair,
+  Measure,
+  EXTRACTORS,
+} from './dataset';
